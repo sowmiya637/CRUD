@@ -1,0 +1,135 @@
+// Variables
+$primary-color: #0d6efd;
+$secondary-color: #f8f9fa;
+$danger-color: #dc3545;
+$warning-color: #ffc107;
+$text-color: #212529;
+$card-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+// Mixins
+@mixin transition($time) {
+  transition: all $time ease-in-out;
+}
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// Global Styles
+body {
+  background: $secondary-color;
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: $text-color;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 900px;
+}
+
+// Heading
+h2 {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  color: $primary-color;
+  text-transform: uppercase;
+}
+
+// Card Styles
+.card {
+  border-radius: 12px;
+  box-shadow: $card-shadow;
+  background: #fff;
+
+  h5 {
+    color: $primary-color;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  form {
+    input {
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      padding: 10px;
+      @include transition(0.3s);
+
+      &:focus {
+        border-color: $primary-color;
+        box-shadow: 0 0 5px rgba(13, 110, 253, 0.5);
+      }
+    }
+
+    button {
+      border-radius: 8px;
+      font-weight: bold;
+      @include transition(0.3s);
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+}
+
+// Table Styling
+.table {
+  border-radius: 10px;
+  overflow: hidden;
+
+  th {
+    background: $primary-color;
+    color: #fff;
+    text-align: center;
+  }
+
+  td {
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  button {
+    border-radius: 8px;
+    font-size: 0.85rem;
+    padding: 5px 10px;
+    margin: 0 2px;
+    @include transition(0.2s);
+
+    &.btn-warning:hover {
+      background: darken($warning-color, 10%);
+    }
+
+    &.btn-danger:hover {
+      background: darken($danger-color, 10%);
+    }
+  }
+}
+
+// Hover Animation for Rows
+tbody tr {
+  @include transition(0.3s);
+
+  &:hover {
+    background: lighten($primary-color, 40%);
+    transform: scale(1.01);
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  table {
+    font-size: 0.85rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+}

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>User Management</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-light">
+
+  <div class="container mt-5">
+    <h2 class="mb-4">User Management (CRUD)</h2>
+
+    
+    <div class="card p-3 mb-4">
+      <h5>Create User</h5>
+      <form id="createForm">
+        <input type="text" id="name" class="form-control mb-2" placeholder="Name" required>
+        <input type="email" id="email" class="form-control mb-2" placeholder="Email" required>
+        <input type="text" id="address" class="form-control mb-2" placeholder="address" required>
+        <button class="btn btn-primary">Add User</button>
+      </form>
+    </div>
+
+    <!-- Users List -->
+    <div class="card p-3">
+      <h5>User List</h5>
+      <table class="table table-bordered" id="usersTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+              <th>Address</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "http://localhost:8000/api/user";
+
+    // CREATE USER
+    document.getElementById("createForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const address = document.getElementById("address").value;
+
+
+      await fetch(`${API_URL}/create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, address})
+      });
+
+      loadUsers();
+      e.target.reset(); // clear form
+    });
+
+    // LOAD USERS
+    async function loadUsers() {
+      const res = await fetch(`${API_URL}/getAllUsers`);
+      const users = await res.json();
+
+      const tbody = document.querySelector("#usersTable tbody");
+      tbody.innerHTML = "";
+
+      users.forEach(user => {
+        const row = `
+          <tr>
+            <td>${user.name}</td>
+            <td>${user.email}</td>
+            <td>${user.address}</td>
+            <td>
+              <button class="btn btn-sm btn-warning" onclick="updateUser('${user._id}')">Update</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteUser('${user._id}')">Delete</button>
+            </td>
+          </tr>`;
+        tbody.innerHTML += row;
+      });
+    }
+
+    // DELETE USER
+    async function deleteUser(id) {
+      await fetch(`${API_URL}/delete/${id}`, { method: "DELETE" });
+      loadUsers();
+    }
+
+    // UPDATE USER 
+    async function updateUser(id) {
+      const newName = prompt("Enter new name:");
+      const newEmail = prompt("Enter new email:");
+      const newAddress = prompt("Enter new address:");
+
+      await fetch(`${API_URL}/update/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: newName, email: newEmail, address: newAddress })
+      });
+
+      loadUsers();
+    }
+
+    loadUsers();
+  </script>
+</body>
+</html>
